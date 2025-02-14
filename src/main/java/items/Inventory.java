@@ -31,6 +31,7 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
     public static void mergeStacks(ItemStack lhs, ItemStack rhs)
     {
         // Refer to the notes from Assignment 1
+        lhs.addItems(rhs.size());
     }
 
     /**
@@ -94,8 +95,7 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
      */
     public boolean isFull()
     {
-        // Replace the next line
-        return false;
+        return this.utilizedSlots() == this.capacity;
     }
 
     /**
@@ -119,7 +119,13 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
     public ItemStack findMatchingItemStack(ItemStack key)
     {
         // Adapt the logic from Assignment 1
-
+        Iterator<ItemStack> it = this.iterator();
+        while (it.hasNext()) {
+            ItemStack current = it.next();
+            if (current.equals(key)) {
+                return current;
+            }
+        }
         return null;
     }
 
@@ -131,6 +137,7 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
     public void addItemStackNoCheck(ItemStack toAdd)
     {
         // Add the missing (one) line by using `this.slots.add(????)`
+        this.slots.add(toAdd);
     }
 
     /**
@@ -166,9 +173,11 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
     public Inventory clone()
     {
         Inventory copy = new Inventory(this.totalSlots());
-
+        Iterator<ItemStack> it = this.iterator();
         // Add the missing copy logic (loop)
-
+        while (it.hasNext()) {
+            copy.addItemStackNoCheck(it.next().clone());
+        }
         return copy;
     }
 
@@ -214,6 +223,11 @@ public class Inventory implements Iterable<ItemStack>, Cloneable
         StringBuilder strBld = new StringBuilder();
         strBld.append(summaryLine);
 
+        Iterator<ItemStack> it = this.iterator();
+        while (it.hasNext()) {
+            String itemLine = String.format("  %s%n", it.next());
+            strBld.append(itemLine);
+        }
         // Add the missing loop
 
         return strBld.toString();
